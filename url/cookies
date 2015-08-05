@@ -1,0 +1,18 @@
+;; Emacs-W3 HTTP cookies file
+;; Automatically generated file!!! DO NOT EDIT!!!
+
+(setq url-cookie-storage
+ '((".vimgolf.com"
+  [url-cookie "__cfduid" "dc99e06d3364acb2b5dd1290fdc93289c1435861300" "01 Jul 16 18:21:40 [GMT]" "/" ".vimgolf.com" nil]
+  [url-cookie "HttpOnly" nil "01 Jul 16 18:21:40 [GMT]" "/" ".vimgolf.com" nil])
+ (".google.com"
+  [url-cookie "NID" "69=K8U84KeiqDZUd8TbOxnFK2VPne5SJKxHQMN4fbHXbxoanNSPFdUZKDE19xeHWiN8hYPqpGYtYatEAWKBgzfAtgVhZ2urQ4GWZZmJ7acMj4SPS4YCpTFZcgmcpZ3OuiSp" "06-Jan-2016 19:50:27.00 GMT" "/" ".google.com" nil]
+  [url-cookie "PREF" "ID=1111111111111111:FF=0:TM=1396553029:LM=1436298627:V=1:S=VIZ4ZDYkfw6SSQ4O" "06-Jul-2017 19:50:27.00 GMT" "/" ".google.com" nil]))
+)
+(setq url-cookie-secure-storage
+ 'nil)
+
+;; Local Variables:
+;; version-control: never
+;; no-byte-compile: t
+;; End:

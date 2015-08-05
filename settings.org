@@ -1,0 +1,1207 @@
+* Configuration
+** Packages
+*** Ace Window
+#+BEGIN_SRC emacs-lisp
+(use-package ace-window
+    :ensure t
+    :bind ("C-:" . ace-window)
+    :init
+    (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+    (setq aw-background nil))
+#+END_SRC
+*** Avy Mode
+#+BEGIN_SRC emacs-lisp
+(use-package avy
+  :ensure t
+  :bind (("C-;" . avy-goto-char))
+  :init
+  :config)
+(global-set-key (kbd "C-;") 'avy-goto-char)
+#+END_SRC
+*** Helm
+#+BEGIN_SRC emacs-lisp
+(use-package helm
+  :ensure helm
+  :diminish helm-mode
+  :config
+       (progn
+            (require 'helm-config)
+            (require 'helm-misc)
+            (define-key helm-map (kbd "C-c h") 'helm-command-prefix)
+            (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+            (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+            (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+            (setq
+             helm-google-suggest-use-curl-p t
+             helm-mini-default-sources '(helm-source-buffers-list
+                                         helm-source-recentf
+                                         helm-source-buffer-not-found
+                                         helm-source-bookmarks)
+             helm-scroll-amount 4 ; scroll 4 lines other window using M-<next>/M-<prior>
+             helm-quick-update t ; do not display invisible candidates
+             helm-idle-delay 0.01 ; be idle for this many seconds, before updating in delayed sources.
+             helm-input-idle-delay 0.01 ; be idle for this many seconds, before updating candidate buffer
+             helm-ff-search-library-in-sexp t ; search for library in `require' and `declare-function' sexp.
+
+             helm-split-window-default-side 'other ;; open helm buffer in another window
+             helm-split-window-in-side-p t ;; open helm buffer inside current window, not occupy whole other window
+;;             helm-buffers-favorite-modes (append helm-buffers-favorite-modes
+;;                                                 '(picture-mode artist-mode))
+             helm-candidate-number-limit 200 ; limit the number of displayed canidates
+             helm-M-x-requires-pattern 0     ; show all candidates when set to 0
+             helm-boring-file-regexp-list
+             '("\\.git$" "\\.hg$" "\\.svn$" "\\.CVS$" "\\._darcs$" "\\.la$" "\\.o$" "\\.i$") ; do not show these files in helm buffer
+             helm-ff-file-name-history-use-recentf t
+             helm-move-to-line-cycle-in-source t ; move to end or beginning of source
+                                                    ; when reaching top or bottom of source.
+             ido-use-virtual-buffers t      ; Needed in helm-buffers-list
+             helm-buffers-fuzzy-matching t          ; fuzzy matching buffer names when non--nil
+                                                    ; useful in helm-mini that lists buffers
+            )
+            (helm-mode))
+  :bind (
+         ("C-c h h" . helm-bookmarks)
+         ("M-x" . helm-M-x)
+         ("M-y" . helm-show-kill-ring)
+         ("C-x b" . helm-mini)
+         ("C-x C-f" . helm-find-files)
+         ("C-c h s" . helm-semantic-or-imenu)
+         ("C-c h m" . helm-man-woman)
+         ("C-c h f" . helm-find)
+         ("C-c h l" . helm-locate)
+         ("C-c h o" . helm-occur)
+         ("C-c h r" . helm-resume)
+         ("C-h SPC" . helm-all-mark-rings)
+         ("C-c h x" . helm-register)
+         ("C-c h g" . helm-google-suggest)
+;;         ("C-i" . helm-execute-persistent-action) ; make TAB works in terminal
+         ("C-z" . helm-select-action) ; list actions using C-z
+;;         ("<return>" . helm-grep-mode-jump-other-window)
+;;         ("n" . helm-grep-mode-jump-other-window-forward)
+;;         ("p" . helm-grep-mode-jump-other-window-backward)
+)
+)
+(use-package helm-swoop
+  :ensure t
+  :bind (("M-i" . helm-swoop)
+         ("M-I" . helm-swoop-back-to-last-point)
+         ("C-c M-i" . helm-multi-swoop)
+         ("C-x M-i" . helm-multi-swoop-all))
+  :init
+  :config (progn
+          ;; When doing isearch, hand the word over to helm-swoop
+          (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+          (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+
+          ;; Hopefully I can type easier now
+          ;;(setq helm-swoop-pre-input-function #'ignore)
+
+          ;; Save buffer when helm-multi-swoop-edit complete
+          (setq helm-multi-swoop-edit-save t)
+
+          ;; If this value is t, split window inside the current window
+          (setq helm-swoop-split-with-multiple-windows nil)
+
+          ;;Split direction. 'split-window-vertically or 'split-window-horizontally
+          (setq helm-swoop-split-direction 'split-window-vertically))
+)
+#+END_SRC
+*** Helm Activations
+#+BEGIN_SRC emacs-lisp
+(use-package helm-eshell
+  :config (setenv "ESHELL" "/bin/csh")
+          (add-hook 'eshell-mode-hook
+          #'(lambda ()
+              (define-key eshell-mode-map (kbd "M-l")  'helm-eshell-history)))
+  :defer t)
+(use-package helm-files
+  :defer t)
+(use-package helm-grep
+  :defer t)
+(use-package helm-flymake
+  :defer t)
+(use-package helm-descbinds
+  :defer t)
+
+;; Save current position to mark ring
+(add-hook 'helm-goto-line-before-hook 'helm-save-current-pos-to-mark-ring)
+
+#+END_SRC
+*** Key Frequency
+#+BEGIN_SRC emacs-lisp
+(use-package keyfreq
+  :ensure t
+  :init
+  :defer t
+  :config (progn
+           (keyfreq-mode 1)
+           (keyfreq-autosave-mode 1))
+)
+#+END_SRC
+*** Spray Mode
+#+BEGIN_SRC emacs-lisp
+(use-package spray
+:bind (("<f6>" . spray))
+)
+#+END_SRC
+*** Key Chord
+#+BEGIN_SRC emacs-lisp
+(use-package key-chord
+  :ensure t
+  :defer t
+  :init
+  (setq key-chord-two-keys-delay 0.05)
+  (key-chord-define-global "x1" 'delete-other-windows)
+  (key-chord-define-global "xk" 'ace-window)
+  (key-chord-define-global "0o" 'delete-window)
+  (key-chord-define-global "cn" 'helm-mini)
+  (key-chord-define-global "cb" 'projectile-switch-to-buffer)
+  (key-chord-define-global "pf" 'projectile-find-file)
+  (key-chord-define-global "jk" 'avy-goto-char)
+  (key-chord-define-global "fd" 'evil-force-normal-state)
+  (key-chord-define-global "fr" 'helm-M-x)
+  (key-chord-define-global "f;" 'helm-find-files)
+  (key-chord-define-global "gh" 'helm-do-grep)
+  (key-chord-define-global "kd" 'helm-swoop)
+  (key-chord-define-global " j" 'aya-expand)
+  (key-chord-define-global " i" 'aya-create)
+  (key-chord-define-global " r" 'er/expand-region)
+  (key-chord-define-global "1q" "!")
+  (key-chord-define-global "2w" "@")
+  (key-chord-define-global "3e" "#")
+  (key-chord-define-global "4r" "$")
+  (key-chord-define-global "5t" "%")
+  (key-chord-define-global "6y" "^")
+  (key-chord-define-global "7y" "&")
+  (key-chord-define-global "8u" "*")
+  (key-chord-define-global "9i" "(")
+  (key-chord-define-global "-p" "_")
+  (key-chord-define-global "qs" 'save-buffer)
+  (key-chord-define-global "q0" 'delete-window)
+  (key-chord-mode +1))
+#+END_SRC
+*** Undo-tree
+#+BEGIN_SRC emacs-lisp
+(use-package undo-tree
+  :ensure t
+  :bind (("C-/" . undo-tree-undo)
+        ("C-x C-/" . undo-tree-redo))
+;;  :diminish
+)
+#+END_SRC
+*** Dired
+#+BEGIN_SRC emacs-lisp
+;;(use-package dired+
+;;  :defer t)
+;;(use-package dired-single
+;;  :init (toggle-diredp-find-file-reuse-dir 1)
+;;  :defer t)
+
+;; Use 'a' instead of enter
+(put 'dired-find-alternate-file 'disabled nil)
+
+;;Dired plus
+   (define-key ctl-x-map   "d" 'dired)
+   (define-key ctl-x-4-map "d" 'diredp-dired-files-other-window)
+#+END_SRC
+*** Powerline
+#+BEGIN_SRC emacs-lisp
+(use-package powerline
+  :ensure t
+  :config (powerline-center-theme))
+#+END_SRC
+*** Smart Mode Line
+#+BEGIN_SRC emacs-lisp
+;;(use-package smart-mode-line
+;;  :defer t)
+#+END_SRC
+*** Multiple Cursors
+#+BEGIN_SRC emacs-lisp
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)
+         ("C-c C-<" . mc/mark-all-like-this)
+         ("C-S-<mouse-1>" . mc/add-cursor-on-click)
+         ("C-S-<mouse-3>" . mc/unmark-next-like-this)
+         ("C-q" . mc/edit-lines)))
+
+#+END_SRC
+*** Projectile
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :defer t
+  :ensure t
+;;  :diminish projectile-mode
+  :init (progn
+  (projectile-global-mode)
+  (helm-projectile-on)
+  (setq projectile-enable-caching t
+        projectile-completion-system 'helm)))
+
+#+END_SRC
+*** Hydra
+#+BEGIN_SRC emacs-lisp
+(use-package hydra
+  :ensure t
+  :config (progn
+              (setq lv-use-separator t))
+  :defer t)
+#+END_SRC
+*** Info+
+#+BEGIN_SRC emacs-lisp
+(use-package info+
+  :defer t)
+#+END_SRC
+*** Desktop
+#+BEGIN_SRC emacs-lisp
+(use-package desktop
+  :defer t)
+#+END_SRC
+*** Namses
+#+BEGIN_SRC emacs-lisp
+(use-package namses
+  :load-path "~/.emacs.d/downloads/nameses.el"
+  :bind (("<f9>"     . nameses-load)
+         ("C-<f9>"   . nameses-prev)
+         ("C-S-<f9>" . nameses-save)))
+#+END_SRC
+*** Zone
+#+BEGIN_SRC emacs-lisp
+;; Zone Mode http://www.emacswiki.org/emacs/ZoneMode
+(use-package zone
+  :config (zone-when-idle 120))
+#+END_SRC
+
+*** Popwin
+#+BEGIN_SRC emacs-lisp
+(use-package popwin
+  :ensure t
+  :defer t)
+#+END_SRC
+
+*** Zop to Char
+#+BEGIN_SRC emacs-lisp
+(use-package zop-to-char
+  :ensure t
+  :bind ("M-z" . zop-to-char)
+  :defer t)
+#+END_SRC
+
+*** Set Flymake
+#+BEGIN_SRC emacs-lisp
+;; Flymake with GHDL
+(use-package set-flymake
+  :load-path "/accts/dithomas/.emacs.d/my_creations/flymake_mod.el"
+  :defer t)
+#+END_SRC
+
+*** CPerl
+#+BEGIN_SRC emacs-lisp
+(use-package cperl
+  :bind
+  :init
+         (progn
+         ;; CPerl Mode
+         (defalias 'perl-mode 'cperl-mode)
+         ;;(define-key cperl-mode-map "C-h f" 'cperl-perldoc)
+         (setq cperl-hairy t) ;; Turns on most of the CPerlMode options
+;; use cperl-mode instead of perl-mode
+(setq auto-mode-alist (rassq-delete-all 'perl-mode auto-mode-alist))
+(add-to-list 'auto-mode-alist '("\\.\\(p\\([lm]\\)\\)\\'" . cperl-mode))
+(defalias 'perl-mode 'cperl-mode)
+(setq interpreter-mode-alist (rassq-delete-all 'perl-mode interpreter-mode-alist))
+(add-to-list 'interpreter-mode-alist '("perl" . cperl-mode))
+(add-to-list 'interpreter-mode-alist '("perl5" . cperl-mode))
+(add-to-list 'interpreter-mode-alist '("miniperl" . cperl-mode))
+         (defun n-cperl-mode-hook ()
+           (plsense-server-start)
+           (perl-completion-mode t)
+(lambda ()
+             (when (require 'auto-complete nil t) ; no error whatever auto-complete.el is not installed.
+               (auto-complete-mode t)
+               (make-variable-buffer-local 'ac-sources)
+               (setq ac-sources
+                     '(ac-source-perl-completion))))
+           (setq cperl-indent-level 4)
+           (setq cperl-continued-statement-offset 0)
+           (setq cperl-extra-newline-before-brace t))
+           (lambda () (modify-syntax-entry ?_ "w")))
+         (add-hook 'cperl-mode-hook 'n-cperl-mode-hook))
+#+END_SRC
+
+*** Perl Completion
+#+BEGIN_SRC emacs-lisp
+(use-package perl-completion
+  :ensure t)
+#+END_SRC
+
+*** PlSense
+#+BEGIN_SRC emacs-lisp
+(use-package plsense
+  :ensure t
+  :config (plsense-config-default))
+
+#+END_SRC
+
+*** Golden Ratio Mode
+#+BEGIN_SRC emacs-lisp
+(use-package golden-ratio
+  :ensure t
+  :bind ("s-j" . golden-ratio)
+  :defer t)
+#+END_SRC
+
+*** Save Place
+#+BEGIN_SRC emacs-lisp
+(use-package saveplace
+  :ensure t
+  :config (setq-default save-place t)
+  :defer t)
+#+END_SRC
+*** Uniquify
+#+BEGIN_SRC emacs-lisp
+(use-package uniquify
+;;  :ensure t
+  :defer t)
+#+END_SRC
+*** Google This
+#+BEGIN_SRC emacs-lisp
+(use-package google-this
+  :bind ("C-x g" . google-this-mode-submap)
+  :defer t)
+#+END_SRC
+*** Company Mode
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :ensure t
+  :defer t
+  :config
+  (setq company-tooltip-align-annotations t)
+  (setq company-idle-delay 0.3)
+  (setq company-dabbrev-ignore-case nil)
+  (setq company-dabbrev-downcase nil)
+;;  (eval-after-load 'company-dabbrev-code
+;;    '(dolist (mode '(coq-mode oz-mode))
+;;       (add-to-list 'company-dabbrev-code-modes mode)))
+  ;; invert the navigation direction if the the completion popup-isearch-match
+  ;; is displayed on top (happens near the bottom of windows)
+  (setq company-tooltip-flip-when-above t)
+  (setq company-dabbrev-code-other-buffers 'code)
+  (global-company-mode))
+#+END_SRC
+*** Auto Complete
+#+BEGIN_SRC emacs-lisp
+(use-package auto-complete
+  :ensure t
+  :diminish auto-complete-mode
+  :init
+  (progn
+    (global-auto-complete-mode t)
+    (setq ac-use-fuzzy t
+          ac-disable-inline t
+          ac-use-menu-map t
+          ac-auto-show-menu t
+          ac-auto-start t
+          ac-ignore-case t
+          ac-candidate-menu-min 0)))
+#+END_SRC
+*** Drag Stuff
+#+BEGIN_SRC emacs-lisp
+(use-package drag-stuff
+  :ensure t
+  :config (drag-stuff-global-mode 1))
+#+END_SRC
+*** Aggressive Indent
+#+BEGIN_SRC emacs-lisp
+(use-package aggressive-indent
+  :ensure t
+  :config (progn
+                (global-aggressive-indent-mode 1)
+                (add-to-list 'aggressive-indent-excluded-modes 'html-mode)
+                (add-to-list 'aggressive-indent-excluded-modes 'verilog-mode)
+                (add-to-list 'aggressive-indent-excluded-modes 'sh-mode)
+                (add-to-list 'aggressive-indent-excluded-modes 'conf-mode)
+                (add-to-list 'aggressive-indent-excluded-modes 'Shell-script-mode)))
+#+END_SRC
+*** Automatic File Headers
+#+BEGIN_SRC emacs-lisp
+;; (autoload 'auto-make-header "header2")
+;; (add-hook 'vhdl-mode-hook 'auto-make-header)
+;;
+;; (register-file-header-action "\$VERSION *= *\"[0-9]+\\." 'update-VCS-version)
+;;
+;; (defun update-VCS-version ()
+;;   "Update VCS version, of the form $VERSION = \"NUM\".
+;; NUM is a decimal number with a decimal point - e.g. 3.1416.
+;; Only the part after the decimal point is incremented."
+;;   (interactive)
+;;   (let* ((beg  (point))
+;;          (eol  (save-excursion (end-of-line) (point)))
+;;          (end  (re-search-forward "\\([^\\\"]+\\)\"" eol t))
+;;          (str  (buffer-substring beg (1- end)))
+;;          (num  (car (condition-case err
+;;                         (read-from-string str)
+;;                       (error (format "Invalid number for version `%s'" str))))))
+;;     (when (>= num most-positive-fixnum)
+;;       (error "Version number is too large to increment: `%s'" num))
+;;     (when (and end (numberp num))
+;;       (let ((newnum (condition-case err2
+;;                         (1+ num)
+;;                       (error (format "Invalid number for version `%s'" str)))))
+;;         (replace-match (format "%d" newnum) nil nil nil 1)))))
+#+END_SRC
+*** Comment Dwim 2
+#+BEGIN_SRC emacs-lisp
+;; https://github.com/remyferre/comment-dwim-2
+(global-set-key (kbd "M-;") 'comment-dwim-2)
+
+#+END_SRC
+*** Yasnippet
+#+BEGIN_SRC emacs-lisp
+(use-package yasnippet
+  :diminish yas-minor-mode
+  :config (progn
+           (yas-global-mode 1)
+           (yas-minor-mode 1)
+           (define-key yas-minor-mode-map (kbd "<tab>") nil)
+           (define-key yas-minor-mode-map (kbd "TAB") nil)
+           (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand)
+           (yas-reload-all))
+)
+#+END_SRC
+*** Auto Yasnippet
+#+BEGIN_SRC emacs-lisp
+(use-package auto-yasnippet
+  :ensure t
+  :defer t
+  :config)
+
+#+END_SRC
+
+*** Expand Region
+#+BEGIN_SRC emacs-lisp
+(use-package expand-region
+  :ensure t
+  :defer t
+  :config)
+#+END_SRC
+*** Emacs Anzu
+#+BEGIN_SRC emacs-lisp
+;; (use-package anzu
+;;   :ensure anzu
+;;   :commands (anzu-query-replace anzu-query-replace-regexp))
+
+(use-package anzu
+  :ensure t
+  :defer t
+  :init (global-anzu-mode +1)
+  :config (progn
+              (setq anzu-mode-lighter "")
+              (setq anzu-deactivate-region t)
+              (setq anzu-search-threshold 1000)
+              (setq anzu-replace-to-string-separator " => ")
+              (global-set-key (kbd "M-%") 'anzu-query-replace)
+              (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)))
+#+END_SRC
+*** Which Key
+#+BEGIN_SRC emacs-lisp
+;; https://github.com/justbur/emacs-which-key
+(use-package which-key
+  :ensure t
+  :init (progn (which-key-mode)
+               (which-key-setup-side-window-bottom))
+
+)
+
+#+END_SRC
+** Emacs Usability
+*** Settings
+#+BEGIN_SRC emacs-lisp
+;; For server
+(server-start)
+
+;; http://stackoverflow.com/questions/8023670/change-number-of-files-recentf-in-emacs-stores-using-ido-completion-method
+(setq recentf-max-saved-items 100)
+;; Get rid of that nasty ass white space
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;;http://emacsredux.com/blog/2013/04/05/prog-mode-the-parent-of-all-programming-modes/
+;; Conflicts with C-;
+;; (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+
+;; VHDL Modelsim Compile
+(require 'compile)
+
+(setq compile-command "vcom")
+(setq compilation-context-lines 10)
+(setq compilation-scroll-output t)
+(setq compilation-auto-jump-to-first-error t)
+(add-to-list 'compilation-error-regexp-alist
+             '("** Warning: \\(.+\\)(\\([0-9]*\\)):" 1 2)
+             '("** Error: \\(.+\\)(\\([0-9]*\\)):" 1 2))
+
+(add-hook 'eshell-load-hook 'nyan-prompt-enable)
+;; http://www.emacswiki.org/emacs/EshellAutojump
+(eval-after-load 'eshell
+  '(require 'eshell-autojump nil t))
+
+(setq eshell-last-dir-ring-size 500)
+
+(tool-bar-mode -1)
+
+(setq user-full-name "Derek Thomas")
+
+(scroll-bar-mode (quote right))
+
+(menu-bar-mode t)
+
+;; Mouse Color
+(set-mouse-color "white")
+
+;; Visual Bell
+(setq visible-bell 1)
+
+;; I-search
+(define-key isearch-mode-map [remap isearch-delete-char] 'isearch-del-char)
+
+;; Completion in mini-buffer
+(icomplete-mode t)
+
+;; Have Line Numbers on
+(global-linum-mode 1)
+
+;; Winner Mode
+(winner-mode 1)
+
+;; Delete like normal
+(delete-selection-mode 1)
+
+;; Grab New-Line
+(setq kill-whole-line t)
+
+;; End sentences with a single space
+(setq sentence-end-double-space nil)
+
+;; Inhibit start page:
+(setq inhibit-startup-message t)
+
+   (show-paren-mode 1)
+   (setq-default indent-tabs-mode nil)
+   (setq x-select-enable-clipboard t
+         x-select-enable-primary t
+         save-interprogram-paste-before-kill t
+         apropos-do-all t
+         mouse-yank-at-point nil
+         save-place-file (concat user-emacs-directory "places")
+         backup-directory-alist `(("." . ,(concat user-emacs-directory
+                                                  "backups"))))
+
+;;Debug on error
+;;(setq debug-on-error t)
+
+;; Tcl words include underscore
+(add-hook 'tcl-mode-hook
+          (lambda () (modify-syntax-entry ?_ "w")))
+
+#+END_SRC
+*** Key Bindings
+#+BEGIN_SRC emacs-lisp
+;; Scrolling Faster
+(global-set-key "\M-n"  (lambda () (interactive) (scroll-up   4)) )
+(global-set-key "\M-p"  (lambda () (interactive) (scroll-down 4)) )
+(global-set-key "\M-N"  (lambda () (interactive) (scroll-up   10)) )
+(global-set-key "\M-P"  (lambda () (interactive) (scroll-down 10)) )
+
+;; Unset C-z
+(global-unset-key (kbd "C-z"))
+
+;; Goto line
+(global-set-key (kbd "M-g") 'goto-line)
+
+;;Buffer Scroll
+(global-set-key (kbd "C-S-<mouse-4>") 'next-buffer)
+(global-set-key (kbd "C-S-<mouse-5>") 'previous-buffer)
+(global-set-key (kbd "C-S-n") 'next-buffer)
+(global-set-key (kbd "C-S-p") 'previous-buffer)
+ ;; Undo and Redo
+     (define-key global-map (kbd "C-/") 'undo-tree-undo)
+     (define-key global-map (kbd "C-x C-/") 'undo-tree-redo)
+
+;;C_TAGS
+(global-set-key (kbd "M-.") 'helm-c-etags-select)
+
+;; FFAP
+(global-set-key (kbd "S-<mouse-3>") 'ffap-at-mouse)
+
+(global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
+;; I rarely use regexp search
+;;(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+;;(global-set-key (kbd "C-r") 'isearch-backward-regexp)
+;;(global-set-key (kbd "C-M-s") 'isearch-forward)
+;;(global-set-key (kbd "C-M-r") 'isearch-backward)
+
+;; Other Window :: Replaced by Ace Window
+;;(global-set-key (kbd "M-`") 'other-window)
+
+;; Window Size
+(global-set-key (kbd "S-<up>") 'enlarge-window)
+(global-set-key (kbd "S-<down>") 'shrink-window)
+(global-set-key (kbd "S-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "S-<left>") 'shrink-window-horizontally)
+#+END_SRC
+*** User Functions
+**** One Key Macro
+#+BEGIN_SRC emacs-lisp
+ ;; One-Key Macro
+ (defun toggle-kbd-macro-recording-on ()
+   "One-key keyboard macros: turn recording on."
+   (interactive)
+   (define-key
+     global-map
+     (this-command-keys)
+     'toggle-kbd-macro-recording-off)
+   (start-kbd-macro nil))
+
+ (defun toggle-kbd-macro-recording-off ()
+   "One-key keyboard macros: turn recording off."
+   (interactive)
+   (define-key
+     global-map
+     (this-command-keys)
+     'toggle-kbd-macro-recording-on)
+   (end-kbd-macro))
+
+ (global-set-key '[(f1)]          'call-last-kbd-macro)
+ (global-set-key '[(shift f1)]    'toggle-kbd-macro-recording-on)
+#+END_SRC
+**** My Macro Query
+#+BEGIN_SRC emacs-lisp
+(defun my-macro-query (arg)
+      "Prompt for input using minibuffer during kbd macro execution.
+    With prefix argument, allows you to select what prompt string to use.
+    If the input is non-empty, it is inserted at point."
+      (interactive "P")
+      (let* ((query (lambda () (kbd-macro-query t)))
+             (prompt (if arg (read-from-minibuffer "PROMPT: ") "Input: "))
+             (input (unwind-protect
+                        (progn
+                          (add-hook 'minibuffer-setup-hook query)
+                          (read-from-minibuffer prompt))
+                      (remove-hook 'minibuffer-setup-hook query))))
+        (unless (string= "" input) (insert input))))
+ (global-set-key "\C-xQ" 'my-macro-query)
+#+END_SRC
+**** Replace Last Sexp
+#+BEGIN_SRC emacs-lisp
+  (defun replace-last-sexp ()
+    (interactive)
+    (let ((value (eval (preceding-sexp))))
+      (kill-sexp -1)
+      (insert (format "%S" value))))
+
+   (global-set-key (kbd "C-x e") 'replace-last-sexp)
+#+END_SRC
+**** Edif Toggle Whitespace Sensitivity
+#+BEGIN_SRC emacs-lisp
+;; Load after ediff-util.
+(defun ediff-toggle-whitespace-sensitivity ()
+  "Toggle whitespace sensitivity for the current EDiff run.
+
+This does not affect the global EDiff settings.  The function
+automatically updates the diff to reflect the change."
+    (interactive)
+    (let ((post-update-message
+           (if (string-match " ?-w$" ediff-actual-diff-options)
+               (progn
+                 (setq ediff-actual-diff-options
+                       (concat ediff-diff-options " " ediff-ignore-case-option)
+                       ediff-actual-diff3-options
+                       (concat ediff-diff3-options " " ediff-ignore-case-option3))
+                 "Whitespace sensitivity on")
+             (setq ediff-actual-diff-options
+                   (concat ediff-diff-options " " ediff-ignore-case-option " -w")
+                   ediff-actual-diff3-options
+                   (concat ediff-diff3-options " " ediff-ignore-case-option3 " -w"))
+             "Whitespace sensitivity off")))
+      (ediff-update-diffs)
+      (message post-update-message)))
+  (add-hook 'ediff-keymap-setup-hook
+            #'(lambda () (define-key ediff-mode-map [?W] 'ediff-toggle-whitespace-sensitivity)))
+(add-hook 'ediff-after-quit-hook-internal 'winner-undo)
+
+#+END_SRC
+**** Helm Prompt Yasnippet
+#+BEGIN_SRC emacs-lisp
+  (defun shk-yas/helm-prompt (prompt choices &optional display-fn)
+    "Use helm to select a snippet. Put this into `yas/prompt-functions.'"
+    (interactive)
+    (setq display-fn (or display-fn 'identity))
+    (if (require 'helm-config)
+        (let (tmpsource cands result rmap)
+          (setq cands (mapcar (lambda (x) (funcall display-fn x)) choices))
+          (setq rmap (mapcar (lambda (x) (cons (funcall display-fn x) x)) choices))
+          (setq tmpsource
+                (list
+                 (cons 'name prompt)
+                 (cons 'candidates cands)
+                 '(action . (("Expand" . (lambda (selection) selection))))
+                 ))
+          (setq result (helm-other-buffer '(tmpsource) "*helm-select-yasnippet"))
+          (if (null result)
+              (signal 'quit "user quit!")
+            (cdr (assoc result rmap))))
+      nil))
+#+END_SRC
+**** Uniquify
+#+BEGIN_SRC emacs-lisp
+;;Uniquify
+(defun uniquify-region-lines (beg end)
+    "Remove duplicate adjacent lines in region."
+    (interactive "*r")
+    (save-excursion
+      (goto-char beg)
+      (while (re-search-forward "^\\(.*\n\\)\\1+" end t)
+        (replace-match "\\1"))))
+
+  (defun uniquify-buffer-lines ()
+    "Remove duplicate adjacent lines in the current buffer."
+    (interactive)
+    (uniquify-region-lines (point-min) (point-max)))
+#+END_SRC
+**** Beginning of Line
+#+BEGIN_SRC emacs-lisp
+(defun smarter-move-beginning-of-line (arg)
+  "Move point back to indentation of beginning of line.
+
+Move point to the first non-whitespace character on this line.
+If point is already there, move to the beginning of the line.
+Effectively toggle between the first non-whitespace character and
+the beginning of the line.
+
+If ARG is not nil or 1, move forward ARG - 1 lines first.  If
+point reaches the beginning or end of the buffer, stop there."
+  (interactive "^p")
+  (setq arg (or arg 1))
+
+  ;; Move lines first
+  (when (/= arg 1)
+    (let ((line-move-visual nil))
+      (forward-line (1- arg))))
+
+  (let ((orig-point (point)))
+    (back-to-indentation)
+    (when (= orig-point (point))
+      (move-beginning-of-line 1))))
+
+;; remap C-a to `smarter-move-beginning-of-line'
+(global-set-key [remap move-beginning-of-line]
+                'smarter-move-beginning-of-line)
+#+END_SRC
+**** Evaluate Shell Command
+#+BEGIN_SRC emacs-lisp
+;; Uses Thing at point as a shell argument
+
+(defun my-flip-flop ()
+(interactive)
+  (setq point-of-start (point))
+  (setq s_type (read-string "Enter Signal Type: "))
+  (setq s_width (read-string "Enter Signal Width (if std_logic, enter 0): "))
+  (setq signal_name (thing-at-point 'symbol))
+ (let* ((command (concat "perl ~/scripts/vhdl_updater.pl ff " signal_name " " s_type " " s_width))
+       (regionp (region-active-p))
+       (beg (if regionp (region-beginning) (buffer-end -1)))
+       (end (if regionp (region-end) (buffer-end 1))))
+  (shell-command-on-region beg end command t t)
+  (message command)
+  (goto-char point-of-start)
+  (backward-char 120)
+  (search-forward signal_name)))
+ (global-set-key '[(f3)]          'my-flip-flop)
+
+(defun my-signal()
+(interactive)
+  (setq point-of-start (point))
+  (setq s_type (read-string "Enter Signal Type: "))
+  (setq s_width (read-string "Enter Signal Width (if std_logic, enter 0): "))
+  (setq signal_name (thing-at-point 'symbol))
+(let* ((command (concat "perl ~/scripts/vhdl_updater.pl sig " signal_name " " s_type " " s_width))
+       (regionp (region-active-p))
+       (beg (if regionp (region-beginning) (buffer-end -1)))
+       (end (if regionp (region-end) (buffer-end 1))))
+  (shell-command-on-region beg end command t t)
+  (message command)
+  (goto-char point-of-start)
+  (backward-char 120)
+  (search-forward signal_name)))
+ (global-set-key '[(f4)]          'my-signal)
+
+#+END_SRC
+**** Helm Hide Mini-buffer
+#+BEGIN_SRC emacs-lisp
+;;https://www.reddit.com/r/emacs/comments/3asbyn/new_and_very_useful_helm_feature_enter_search/
+(setq helm-echo-input-in-header-line t)
+
+(defun helm-hide-minibuffer-maybe ()
+  (when (with-helm-buffer helm-echo-input-in-header-line)
+    (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+      (overlay-put ov 'window (selected-window))
+      (overlay-put ov 'face (let ((bg-color (face-background 'default nil)))
+                              `(:background ,bg-color :foreground ,bg-color)))
+      (setq-local cursor-type nil))))
+
+(add-hook 'helm-minibuffer-set-up-hook 'helm-hide-minibuffer-maybe)
+#+END_SRC
+*** Snippets to Eval
+#+BEGIN_SRC emacs-lisp
+;; #+LaTeX_CLASS: beamer in org files
+(unless (boundp 'org-export-latex-classes)
+  (setq org-export-latex-classes nil))
+(add-to-list 'org-export-latex-classes
+  ;; beamer class, for presentations
+  '("beamer"
+     "\\documentclass[11pt]{beamer}\n
+      \\mode<{{{beamermode}}}>\n
+      \\usetheme{{{{beamertheme}}}}\n
+      \\usecolortheme{{{{beamercolortheme}}}}\n
+      \\beamertemplateballitem\n
+      \\setbeameroption{show notes}
+      \\usepackage[utf8]{inputenc}\n
+      \\usepackage[T1]{fontenc}\n
+      \\usepackage{hyperref}\n
+      \\usepackage{color}
+      \\usepackage{listings}
+      \\lstset{numbers=none,language=[ISO]C++,tabsize=4,
+  frame=single,
+  basicstyle=\\small,
+  showspaces=false,showstringspaces=false,
+  showtabs=false,
+  keywordstyle=\\color{blue}\\bfseries,
+  commentstyle=\\color{red},
+  }\n
+      \\usepackage{verbatim}\n
+      \\institute{{{{beamerinstitute}}}}\n
+       \\subject{{{{beamersubject}}}}\n"
+
+     ("\\section{%s}" . "\\section*{%s}")
+
+     ("\\begin{frame}[fragile]\\frametitle{%s}"
+       "\\end{frame}"
+       "\\begin{frame}[fragile]\\frametitle{%s}"
+       "\\end{frame}")))
+
+  ;; letter class, for formal letters
+
+  (add-to-list 'org-export-latex-classes
+
+  '("letter"
+     "\\documentclass[11pt]{letter}\n
+      \\usepackage[utf8]{inputenc}\n
+      \\usepackage[T1]{fontenc}\n
+      \\usepackage{color}"
+
+     ("\\section{%s}" . "\\section*{%s}")
+     ("\\subsection{%s}" . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+
+#+END_SRC
+
+#+RESULTS:
+| letter | \documentclass[11pt]{letter}\n\n      \usepackage[utf8]{inputenc}\n\n      \usepackage[T1]{fontenc}\n\n      \usepackage{color}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | (\section{%s} . \section*{%s}) | (\subsection{%s} . \subsection*{%s})                                                                  | (\subsubsection{%s} . \subsubsection*{%s}) | (\paragraph{%s} . \paragraph*{%s}) | (\subparagraph{%s} . \subparagraph*{%s}) |
+| beamer | \documentclass[11pt]{beamer}\n\n      \mode<{{{beamermode}}}>\n\n      \usetheme{{{{beamertheme}}}}\n\n      \usecolortheme{{{{beamercolortheme}}}}\n\n      \beamertemplateballitem\n\n      \setbeameroption{show notes}\n      \usepackage[utf8]{inputenc}\n\n      \usepackage[T1]{fontenc}\n\n      \usepackage{hyperref}\n\n      \usepackage{color}\n      \usepackage{listings}\n      \lstset{numbers=none,language=[ISO]C++,tabsize=4,\n  frame=single,\n  basicstyle=\small,\n  showspaces=false,showstringspaces=false,\n  showtabs=false,\n  keywordstyle=\color{blue}\bfseries,\n  commentstyle=\color{red},\n  }\n\n      \usepackage{verbatim}\n\n      \institute{{{{beamerinstitute}}}}\n          \n       \subject{{{{beamersubject}}}}\n | (\section{%s} . \section*{%s}) | (\begin{frame}[fragile]\frametitle{%s} \end{frame} \begin{frame}[fragile]\frametitle{%s} \end{frame}) |                                            |                                    |                                          |
+
+** Hydra
+*** Drag Stuff
+#+BEGIN_SRC emacs-lisp
+ (defhydra hydra-drag-stuff (global-map "s-r" :color red)
+    "Drag Stuff"
+    ("j" drag-stuff-down "line down" :color red)
+    ("k" drag-stuff-up "line up" :color red)
+    ("h" drag-stuff-left "word left" :color red)
+    ("l" drag-stuff-right "word right" :color red)
+    ("/" undo "undo" :color red)
+    ("g" nil "blue" :cancel color)
+    ("C-g" nil "blue" :cancel color)
+    ("C-n" next-line "move to the next line" :color red)
+    ("n" next-line "move to the next line" :color red)
+    ("C-p" previous-line "move to the previous line" :color red)
+    ("p" previous-line "move to the previous line" :color red)
+)
+
+(global-set-key (kbd "C-c C-v") 'hydra-toggle/body)
+#+END_SRC
+*** Multiple Cursors
+#+BEGIN_SRC emacs-lisp
+(defhydra cqql-multiple-cursors-hydra (:hint nil)
+  "
+     ^Up^            ^Down^        ^Miscellaneous^
+----------------------------------------------
+[_p_]   Next    [_n_]   Next    [_l_] Edit lines
+[_P_]   Skip    [_N_]   Skip    [_a_] Mark all
+[_M-p_] Unmark  [_M-n_] Unmark  [_q_] Quit"
+  ("l" mc/edit-lines :exit t)
+  ("a" mc/mark-all-like-this :exit t)
+  ("n" mc/mark-next-like-this)
+  ("N" mc/skip-to-next-like-this)
+  ("M-n" mc/unmark-next-like-this)
+  ("p" mc/mark-previous-like-this)
+  ("P" mc/skip-to-previous-like-this)
+  ("M-p" mc/unmark-previous-like-this)
+  ("q" nil))
+;;(global-set-key (kbd "C-q") 'cqql-multiple-cursors-hydra)
+#+END_SRC
+*** Org Movement
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-org-movement (:color red :hint nil)
+  "
+Navigation^
+---------------------------------------------------------
+_j_ next heading
+_k_ prev heading
+_h_ next heading (same level)
+_l_ prev heading (same level)
+_u_p higher heading
+_g_o to
+"
+  ("j" outline-next-visible-heading)
+  ("k" outline-previous-visible-heading)
+  ("h" org-forward-heading-same-level)
+  ("l" org-backward-heading-same-level)
+  ("u" outline-up-heading)
+  ("g" org-goto :exit t))
+#+END_SRC
+*** Window Movement
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-window-stuff (:hint nil)
+    "
+          Split: _v_ert  _s_:horz
+         Delete: _c_lose  _o_nly
+  Switch Window: _h_:left  _j_:down  _k_:up  _l_:right
+        Buffers: _p_revious  _n_ext  _b_:select  _f_ind-file  _F_projectile
+         Winner: _u_ndo  _r_edo
+         Resize: _H_:splitter left  _J_:splitter down  _K_:splitter up  _L_:splitter right
+           Move: _a_:up  _z_:down  _i_menu"
+
+
+    ("z" scroll-up-line)
+    ("a" scroll-down-line)
+    ("i" idomenu)
+
+    ("u" winner-undo)
+    ("r" winner-redo)
+
+    ("h" windmove-left)
+    ("j" windmove-down)
+    ("k" windmove-up)
+    ("l" windmove-right)
+
+    ("p" previous-buffer)
+    ("n" next-buffer)
+    ("b" helm-switch-buffer)
+    ("f" helm-find-file)
+    ("F" projectile-find-file)
+
+    ("s" split-window-below)
+    ("v" split-window-right)
+
+    ("c" delete-window)
+    ("o" delete-other-windows)
+
+    ("H" hydra-move-splitter-left)
+    ("J" hydra-move-splitter-down)
+    ("K" hydra-move-splitter-up)
+    ("L" hydra-move-splitter-right)
+
+    ("q" nil))
+#+END_SRC
+#+END_SRC
+*** Rectangle Operations
+#+BEGIN_SRC emacs-lisp
+;;https://github.com/abo-abo/hydra/wiki/Rectangle-Operations
+(defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
+                           :color pink
+                           :post (deactivate-mark))
+  "
+  ^_k_^     _d_elete    _s_tring
+_h_   _l_   _o_k        _y_ank
+  ^_j_^     _n_ew-copy  _r_eset
+^^^^        _e_xchange  _u_ndo
+^^^^        ^ ^         _p_aste
+"
+  ("h" backward-char nil)
+  ("l" forward-char nil)
+  ("k" previous-line nil)
+  ("j" next-line nil)
+  ("e" exchange-point-and-mark nil)
+  ("n" copy-rectangle-as-kill nil)
+  ("d" delete-rectangle nil)
+  ("r" (if (region-active-p)
+           (deactivate-mark)
+         (rectangle-mark-mode 1)) nil)
+  ("y" yank-rectangle nil)
+  ("u" undo nil)
+  ("s" string-rectangle nil)
+  ("p" kill-rectangle nil)
+  ("o" nil nil))
+;; (global-set-key (kbd "C-x SPC") 'hydra-rectangle/body)
+#+END_SRC
+** Org Mode
+*** Use Package Org
+#+BEGIN_SRC emacs-lisp
+(use-package org
+  :bind
+  :config (progn
+           (setq org-log-done t)
+           (setq org-catch-invisible-edits t)
+
+(org-babel-do-load-languages
+ (quote org-babel-load-languages)
+ (quote ((emacs-lisp . t)
+         (dot . t)
+         (ditaa . t)
+         (R . t)
+         (python . t)
+         (ruby . t)
+         (gnuplot . t)
+         (clojure . t)
+         (sh . t)
+         (ledger . t)
+         (org . t)
+         (plantuml . t)
+         (latex . t))))
+
+(setq org-catch-invisible-edits "smart")
+
+;; Org Capture http://orgmode.org/manual/Setting-up-capture.html#Setting-up-capture
+;;________________________________________________________________________
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+
+; Do not prompt to confirm evaluation
+; This may be dangerous - make sure you understand the consequences
+; of setting this -- see the docstring for details
+(setq org-confirm-babel-evaluate nil)
+
+
+; Do not prompt to confirm evaluation
+; This may be dangerous - make sure you understand the consequences
+; of setting this -- see the docstring for details
+(setq org-confirm-babel-evaluate nil)
+
+;; fontify code in code blocks
+(setq org-src-fontify-natively t)
+; Use fundamental mode when editing plantuml blocks with C-c '
+(add-to-list 'org-src-lang-modes (quote ("plantuml" . plantuml-mode)))
+
+(setq org-agenda-files (list "~/.org/red_hmi_todo.org" "~/org/*"))
+
+(add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
+
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+
+;; Org Capture http://orgmode.org/manual/Setting-up-capture.html#Setting-up-capture
+;;________________________________________________________________________
+ (setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
+             "* TODO %?\n  %i\n  %a")
+        ("j" "Journal" entry (file+datetree "~/org/journal.org")
+             "* %?\nEntered on %U\n  %i\n  %a")))
+))
+
+#+END_SRC
+*** Org Functions
+**** Display Inline Images
+#+BEGIN_SRC emacs-lisp
+;;http://doc.norang.ca/org-mode.html#OrgBabel
+;;________________________________________________________________________
+(defun bh/display-inline-images ()
+  (condition-case nil
+      (org-display-inline-images)
+    (error nil)))
+#+END_SRC
+**** Hydra Org Template
+#+BEGIN_SRC emacs-lisp
+;; Org Template http://oremacs.com/2015/03/07/hydra-org-templates/
+;;________________________________________________________________________
+(defhydra hydra-org-template (:color blue :hint nil)
+  "
+_c_enter  _q_uote    _L_aTeX:
+_l_atex   _e_xample  _i_ndex:
+_a_scii   _v_erse    _I_NCLUDE:
+_s_rc     ^ ^        _H_TML:
+_h_tml    ^ ^        _A_SCII:
+"
+  ("s" (hot-expand "<s"))
+  ("e" (hot-expand "<e"))
+  ("q" (hot-expand "<q"))
+  ("v" (hot-expand "<v"))
+  ("c" (hot-expand "<c"))
+  ("l" (hot-expand "<l"))
+  ("h" (hot-expand "<h"))
+  ("a" (hot-expand "<a"))
+  ("L" (hot-expand "<L"))
+  ("i" (hot-expand "<i"))
+  ("I" (hot-expand "<I"))
+  ("H" (hot-expand "<H"))
+  ("A" (hot-expand "<A"))
+  ("<" self-insert-command "ins")
+  ("o" nil "quit"))
+
+(defun hot-expand (str)
+  "Expand org template."
+  (insert str)
+  (org-try-structure-completion))
+
+(define-key org-mode-map "<"
+  (lambda () (interactive)
+     (if (looking-back "^")
+         (hydra-org-template/body)
+       (self-insert-command 1))))
+#+END_SRC
+**** Key Bindings
+#+BEGIN_SRC emacs-lisp
+
+(define-key global-map "\C-cc" 'org-capture)
+
+;; Standard key bindings
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+
+#+END_SRC
+*** Org Packages
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+  :defer t)
+#+END_SRC
+** Commented out code
+#+BEGIN_SRC emacs-lisp
+
+;;Macros
+;;(eval-after-load "macros" '(require 'macros+))
+;;(define-key emacs-lisp-mode-map (kbd "C-c e") 'macrostep-expand)
+
+;; Confluence
+;;(require 'confluence)
+;;(setq confluence-url "http://alm.rockwellcollins.com/wiki/rpc/xmlrpc")
+
+
+
+;;(add-to-list 'package-archives
+;;             '("dsvn" "http://svn.apache.org/repos/asf/subversion/trunk/contrib/client-side/emacs/dsvn.el"))
+
+;; Scrolling
+;;  (sublimity-global-mode)
+;;(setq sublimity-scroll-drift-length 1 sublimity-scroll-weight 4)
+;;(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+
+#+END_SRC
+** EVIL Mode
+#+BEGIN_SRC emacs-lisp
+
+
+#+END_SRC

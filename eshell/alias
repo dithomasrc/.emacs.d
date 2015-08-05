@@ -1,0 +1,62 @@
+alias ll ls -l $*
+alias derek cd /rfs/proj/gs_adcnas2_exrestricted/dithomas
+alias jpals cd /rfs/proj/jpals_fpga_exrestricted/jpals/
+alias flexnet cd /rfs/proj/gs_flexnet_fpga/
+alias jaguar2 cd /rfs/proj/gs_jaguar2_asic/
+alias jaguar cd /rfs/proj/gs_jaguar_asic_exrestricted/
+alias nas42 cd /rfs/proj/gs_adcnas42_exrestricted/
+alias nas8 cd /rfs/proj/gs_adcnas8_exrestricted/
+alias nas7 cd /rfs/proj/gs_adcnas7_exrestricted/
+alias nas5 cd /rfs/proj/gs_adcnas5_exrestricted/
+alias nas4 cd /rfs/proj/gs_adcnas4_exrestricted/
+alias nas3 cd /rfs/proj/gs_adcnas3_exrestricted/
+alias nas2 cd /rfs/proj/gs_adcnas2_exrestricted/
+alias nas1 cd /rfs/proj/gs_adcnas1_exrestricted/
+alias asic_dsn cd /rfs/proj/gs_asic_dsn/
+alias gsadc_nas cd /rfs/proj/gsadc_nas/
+alias rage6 cd /rfs/proj/rage_gs_adc6/
+alias rage5 cd /rfs/proj/rage_gs_adc5/
+alias rage4 cd /rfs/proj/rage_gs_adc4/
+alias rage3 cd /rfs/proj/rage_gs_adc3/
+alias rage2 cd /rfs/proj/rage_gs_adc2/
+alias rage1 cd /rfs/proj/rage_gs_adc1/
+alias go_svn source /rfs/apps/sds/subversion/go_svn_1.7.5
+alias go_flowtracer source /rfs/apps/eda/bin/go_flowtracer
+alias xterm xterm -bg black -fg green
+alias prince /rfs/proj/calamity_gs_adc_vob1/prince/bin/prince
+alias vncs vncserver -geometry 2560x940
+alias vi ~rlhofer/linux/bin/vim
+alias term /usr/bin/xterm -bg black -fg cyan -geometry 100x33 -T rorqual -n rorqual -e ssh rorqual &
+alias svng svn stat | grep
+alias ssalt cd /rfs/proj/gs_adcnas2_exrestricted/dithomas/CRSVN/salt
+alias script_checkout /usr/lfs/ssd_v0/crsvn/dcu; source startfile 64 cdc
+alias salty cd /usr/lfs/ssd_v0/crsvn/gs_l16mff_fpga/branches/salt/modem/wf_fpga/src/dsn/l16/tx_processing_wrapper
+alias salt cd /usr/lfs/ssd_v0/crsvn/gs_l16mff_fpga/branches/salt/modem/wf_fpga/src
+alias perlmod echo     perl -MFile::Find=find -MFile::Spec::Functions -Tlw -e 'find { wanted => sub { print canonpath $_ if /\.pm\z/ }, no_chdir => 1 }, @INC'
+alias p pushd
+alias o popd
+alias ng newgrp gs-awacs-dcu-fpga
+alias nacl cd /usr/lfs/ssd_v0/crsvn/gs_l16mff_fpga/branches/salt_discretes
+alias mm cd /rfs/proj/gs_mos_mod_fpga_exrestricted/dithomas/MIDS_Terminal_Emulator
+alias h history
+alias grep grep --color -i
+alias ff firefox
+alias emc /usr/lfs/hdd_v1/apps/emacs-24.3-stable/bin/emacsclient
+alias em /usr/lfs/hdd_v1/apps/emacs-24.3-stable/bin/emacs
+alias ec /usr/lfs/hdd_v1/apps/emacs-24.3-stable/bin/emacsclient
+alias d dirs
+alias cw cd /rfs/proj/gs_awacs_dcu_fpga/views/dithomas;source startfile 64 cdc
+alias crsvn cd /usr/lfs/ssd_v0/crsvn
+alias cd_srw cd /rfs/proj/gs_adcnas2_exrestricted/dithomas/CRSVN/gs_tactical_SRW_fpga/trunk/demos/SRW_networking/cc_mode_111/src/srw_wf
+alias cd_d cd /rfs/proj/gs_adcnas2_exrestricted/dithomas/
+alias cd_c cd /rfs/proj/gs_adcnas2_exrestricted/dithomas/CRSVN
+alias cd3 cd ../../..
+alias cd2 cd ../..
+alias c xulrunner /accts/dithomas/conkeror/application.ini
+alias apps cd /rfs/apps/eda/bin
+alias .. cd ..
+alias x exit
+alias md mkdir -p \!:1; cd \!:1
+alias pu pushd
+alias po popd
+alias clear recenter 0

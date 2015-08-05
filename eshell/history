@@ -1,0 +1,128 @@
+cd apps
+cd $-
+cd -
+cd ..
+cd $-
+cd $-
+cd $-
+$_
+(setq apps            "/rfs/apps/eda/bin")
+cd apps
+cd $apps
+ll
+ls
+Matlab_2006a.bat
+cp ~/.aliases ~/.emacs.d/aliases.el 
+alias derek            "cd /rfs/proj/gs_adcnas2_exrestricted/dithomas"
+derek
+cd $editor
+go_svn
+alias cd_c             "cd /rfs/proj/gs_adcnas2_exrestricted/dithomas/CRSVN"
+cd_c 
+(setq eshell-highlight-prompt t)
+load ~/.emacs.d/aliases.el 
+load ~/.emacs.d/aliases.el 
+alias po "popd"
+po
+md
+alias pu "pushd"
+alias md "mkdir -p \!:1; cd \!:1"
+md test
+ll
+cd ..
+ls
+load ~/.emacs.d/aliases.el 
+load ~/.emacs.d/aliases.el 
+cd3
+load ~/.emacs.d/aliases.el 
+(alias po "popd")(alias pu "pushd")
+load ~/.emacs.d/aliases.el 
+load ~/.emacs.d/aliases.el 
+cd2
+load ~/.emacs.d/aliases.el 
+cd3
+load /accts/dithomas/.emacs.d/eshell/alias
+derek
+alias derek            "cd /rfs/proj/gs_adcnas2_exrestricted/dithomas"
+derek
+rage
+nas1
+nas1
+derek
+h
+clear
+80  load ~/.emacs.d/aliases.el clear
+clear
+load /accts/dithomas/.emacs.d/eshell/alias
+clear
+recenter -
+recenter 0
+derek
+cd2
+cd -
+mm
+ll
+ll
+ll
+ll
+cd ~
+ll
+ls
+ll
+ff results.txt 
+find-file results.txt 
+query-replace-regexp results.txt 
+query-replace-regexp results.txt src not_src
+query-replace-regexp results.txt (src not_src)
+j test
+j derek
+j $derek
+j perl_modules/
+j mids
+cd $mm
+ll
+rm #startfile# #test.uml#
+ll
+rm #startfile#
+rm -f #startfile#
+ll
+d
+dired
+dired .
+ss
+ff 
+find-file startfile
+find-file startfile
+find-file ./src/tb/compile.csh
+cp ../../../../control_fpga/peripherals/src/dsn/control_lvt_terminal_interface.vhd .
+cp ../../../../control_fpga/peripherals/src/dsn/control_lvt_terminal_interface-rtl.vhd .
+qee
+qrr
+cd ../../tb/
+ll
+cp ./hpa_dut_top_tb.vhd ./lvt_interface_tester_top.vhd
+svn --help
+svn revert ./hpa_dut_top_tb.vhd
+cp ../../../../dlalldre/
+ll
+cd ../../../../dlalldre/
+ll
+cd mos_mod_fpga/
+ll
+cd MIDS_Terminal_Emulator/
+ll
+cd src/
+ll
+cd dsn/
+ll
+cd top_level/
+ll
+ll -rt
+cp ./mos_mod_control_pkg.vhd $mm/src/dsn/top_level/
+cd3
+cd ../control_fpga/control/
+cd ../common/
+ll
+cp ./mocb_target_flow_control_dev/ $mm/../control_fpga/common/
+rm -rf $mm/../control_fpga/common/
+cp ./mocb_target_flow_control_dev/ $mm/../control_fpga/common/
